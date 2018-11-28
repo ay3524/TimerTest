@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Coun
         startButton.setOnClickListener(this);
         stopButton.setOnClickListener(this);
         checkButton.setOnClickListener(this);
+
+        Toolbar mActionBarToolbar = view.findViewById(R.id.toolbarId);
+        ((MainActivity) getActivity()).setSupportActionBar(mActionBarToolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Timer Test");
 
         ((MainActivity) getActivity()).registerTimerCallbacks(this);
     }

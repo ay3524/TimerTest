@@ -46,9 +46,12 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Cou
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbarId);
         toolbar.setNavigationOnClickListener(this);
         textView = view.findViewById(R.id.text_timer);
+
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Timer Test");
 
         ((MainActivity) getActivity()).registerTimerCallbacks(this);
     }

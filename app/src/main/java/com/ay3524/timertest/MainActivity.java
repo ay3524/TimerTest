@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,8 +20,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Call
     public static final String timerIntentFilter = "timer_intent_filter";
     public static final String homeFragmentTag = "tag_home_fragment";
     public static final String timerFragmentTag = "tag_timer_fragment";
+
     private LocalBroadcastManager localBroadcastManager;
-    private FragmentManager mFragmentManager;
     private TimerService mTimerService;
     private boolean isTimerServiceBound;
     private Intent mTimerIntent;
@@ -34,10 +33,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Call
 
         startTimerService();
 
-        mFragmentManager = getSupportFragmentManager();
-
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-
         localBroadcastManager.registerReceiver(listener, new IntentFilter(timerIntentFilter));
     }
 
@@ -50,11 +46,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Call
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-
-        Fragment currentFragment = getCurrentFragment(mFragmentManager);
+//        Fragment currentFragment = getCurrentFragment(getSupportFragmentManager());
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content);
         if (!(currentFragment instanceof HomeFragment)) {
-            mFragmentManager.popBackStackImmediate();
+            getSupportFragmentManager().popBackStackImmediate();
         }
     }
 
@@ -64,27 +59,16 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Call
             //Start the TimerFragment...
             Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(timerFragmentTag);
             if (!(currentFragment instanceof TimerFragment)) {
-                replaceFragment(R.id.content, TimerFragment.newInstance(), timerFragmentTag);
+                replaceFragment(TimerFragment.newInstance(), timerFragmentTag);
             }
         }
     };
 
-    protected void addFragment(@IdRes int containerViewId,
-                               @NonNull Fragment fragment,
-                               @NonNull String fragmentTag) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(containerViewId, fragment, fragmentTag)
-                .disallowAddToBackStack()
-                .commit();
-    }
-
-    protected void replaceFragment(@IdRes int containerViewId,
-                                   @NonNull Fragment fragment,
+    protected void replaceFragment(@NonNull Fragment fragment,
                                    @NonNull String fragmentTag) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(containerViewId, fragment, fragmentTag)
+                .replace(R.id.content, fragment, fragmentTag)
                 .addToBackStack(null)
                 .commit();
     }
@@ -104,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Call
         //Start the TimerFragment...
         Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(timerFragmentTag);
         if (!(currentFragment instanceof TimerFragment)) {
-            replaceFragment(R.id.content, TimerFragment.newInstance(), timerFragmentTag);
+            replaceFragment(TimerFragment.newInstance(), timerFragmentTag);
         }
     }
 
@@ -127,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Call
     private void launchHomeFragment() {
         HomeFragment homeFragment = HomeFragment.newInstance();
         homeFragment.setListener(MainActivity.this);
-        replaceFragment(R.id.content, homeFragment, homeFragmentTag);
+        replaceFragment(homeFragment, homeFragmentTag);
     }
 
     private void startTimerService() {
