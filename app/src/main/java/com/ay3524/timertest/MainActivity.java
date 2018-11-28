@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -46,10 +45,18 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Call
 
     @Override
     public void onBackPressed() {
-//        Fragment currentFragment = getCurrentFragment(getSupportFragmentManager());
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content);
         if (!(currentFragment instanceof HomeFragment)) {
             getSupportFragmentManager().popBackStackImmediate();
+        }
+    }
+
+    @Override
+    public void onCheckPressed() {
+        //Start the TimerFragment...
+        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(timerFragmentTag);
+        if (!(currentFragment instanceof TimerFragment)) {
+            replaceFragment(TimerFragment.newInstance(null), timerFragmentTag);
         }
     }
 
@@ -59,38 +66,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Call
             //Start the TimerFragment...
             Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(timerFragmentTag);
             if (!(currentFragment instanceof TimerFragment)) {
-                replaceFragment(TimerFragment.newInstance(), timerFragmentTag);
+                replaceFragment(TimerFragment.newInstance("Timer Finished!"), timerFragmentTag);
             }
         }
     };
-
-    protected void replaceFragment(@NonNull Fragment fragment,
-                                   @NonNull String fragmentTag) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content, fragment, fragmentTag)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    public static Fragment getCurrentFragment(FragmentManager mFragmentManager) {
-        if (mFragmentManager != null) {
-            if (mFragmentManager.getBackStackEntryCount() != 0) {
-                String fragmentTag = mFragmentManager.getBackStackEntryAt(mFragmentManager.getBackStackEntryCount() - 1).getName();
-                return mFragmentManager.findFragmentByTag(fragmentTag);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void onCheckPressed() {
-        //Start the TimerFragment...
-        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(timerFragmentTag);
-        if (!(currentFragment instanceof TimerFragment)) {
-            replaceFragment(TimerFragment.newInstance(), timerFragmentTag);
-        }
-    }
 
     private ServiceConnection mTimerConnection = new ServiceConnection() {
         @Override
@@ -107,6 +86,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.Call
             isTimerServiceBound = false;
         }
     };
+
+    protected void replaceFragment(@NonNull Fragment fragment,
+                                   @NonNull String fragmentTag) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content, fragment, fragmentTag)
+                .addToBackStack(null)
+                .commit();
+    }
 
     private void launchHomeFragment() {
         HomeFragment homeFragment = HomeFragment.newInstance();

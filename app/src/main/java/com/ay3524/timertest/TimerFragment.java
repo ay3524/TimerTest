@@ -21,17 +21,20 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Cou
 
     private TextView textView;
     private CounterActions counterActions;
+    private static final String TIMER_FINISH = "timer_finish";
 
     public TimerFragment() {
         // Required empty public constructor
     }
 
-    public static TimerFragment newInstance() {
-
-        Bundle args = new Bundle();
-
+    public static TimerFragment newInstance(String data) {
         TimerFragment fragment = new TimerFragment();
-        fragment.setArguments(args);
+        if (data != null) {
+            Bundle args = new Bundle();
+            args.putString(TIMER_FINISH, data);
+            fragment.setArguments(args);
+        }
+
         return fragment;
     }
 
@@ -50,8 +53,13 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Cou
         toolbar.setNavigationOnClickListener(this);
         textView = view.findViewById(R.id.text_timer);
 
-        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Timer Test");
+        if (getArguments() != null) {
+            String mParam1 = getArguments().getString(TIMER_FINISH);
+            textView.setText(mParam1);
+        }
+
+        Objects.requireNonNull(((MainActivity) getActivity())).setSupportActionBar(toolbar);
+        Objects.requireNonNull(((MainActivity) getActivity()).getSupportActionBar()).setTitle("Timer Test");
 
         ((MainActivity) getActivity()).registerTimerCallbacks(this);
     }
@@ -68,7 +76,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Cou
 
     @Override
     public void onClick(View v) {
-        Objects.requireNonNull(getActivity()).onBackPressed();
+        Objects.requireNonNull(((MainActivity) getActivity())).onBackPressed();
     }
 
     @Override
