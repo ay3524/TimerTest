@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Coun
 
     @Override
     public void onTick(long millisUntilFinished) {
-        timerText.setText(String.valueOf(millisUntilFinished / 1000));
+        timerText.setText(Utils.formatTime(millisUntilFinished));
     }
 
     @Override

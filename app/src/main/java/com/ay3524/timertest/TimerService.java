@@ -11,7 +11,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class TimerService extends Service implements CounterActions{
+public class TimerService extends Service implements CounterActions {
 
     private final IBinder mTimerBinder = new TimerBinder();
     CountDownTimer countDownTimer;
@@ -37,10 +37,11 @@ public class TimerService extends Service implements CounterActions{
         if (isTimerRunning) {
             onStopTimer();
         }
+        //For Testing 60 * 60 * 1000 * 2
         countDownTimer = new CountDownTimer(10000, 1000) {
             public void onTick(long millisUntilFinished) {
 
-                for(CounterCallbacks counterCallback : timerListeners){
+                for (CounterCallbacks counterCallback : timerListeners) {
                     counterCallback.onTick(millisUntilFinished);
                 }
 
@@ -50,7 +51,7 @@ public class TimerService extends Service implements CounterActions{
 
             public void onFinish() {
 
-                for(CounterCallbacks counterCallback : timerListeners){
+                for (CounterCallbacks counterCallback : timerListeners) {
                     counterCallback.onFinish();
                 }
 

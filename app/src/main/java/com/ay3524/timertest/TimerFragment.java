@@ -66,7 +66,7 @@ public class TimerFragment extends Fragment implements View.OnClickListener, Cou
 
     @Override
     public void onTick(long millisUntilFinished) {
-        textView.setText(String.valueOf(millisUntilFinished / 1000));
+        textView.setText(Utils.formatTime(millisUntilFinished));
     }
 
     @Override
